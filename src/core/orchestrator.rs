@@ -27,7 +27,7 @@ impl DependencyOrchestrator {
         let adapter = self
             .registry
             .get_adapter(ecosystem)
-            .ok_or_else(|| DependencyBlameError::UnsupportedEcosystem)?;
+            .ok_or(DependencyBlameError::UnsupportedEcosystem)?;
 
         let dependency = adapter
             .parser()
@@ -76,7 +76,7 @@ impl DependencyOrchestrator {
         let adapter = self
             .registry
             .get_adapter(ecosystem)
-            .ok_or_else(|| DependencyBlameError::UnsupportedEcosystem)?;
+            .ok_or(DependencyBlameError::UnsupportedEcosystem)?;
 
         adapter.parser().parse_dependencies(&dep_file)
     }

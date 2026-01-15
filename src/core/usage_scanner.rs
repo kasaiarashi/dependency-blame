@@ -21,7 +21,7 @@ impl UsageScanner {
         let adapter = self
             .registry
             .get_adapter(dependency.ecosystem)
-            .ok_or_else(|| crate::core::error::DependencyBlameError::UnsupportedEcosystem)?;
+            .ok_or(crate::core::error::DependencyBlameError::UnsupportedEcosystem)?;
 
         let scanner = adapter.scanner();
         let extensions: Vec<String> = scanner

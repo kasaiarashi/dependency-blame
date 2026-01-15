@@ -125,7 +125,7 @@ impl GitAnalyzer {
     fn extract_commit_info(&self, commit: &git2::Commit, file_path: &Path) -> Result<GitInfo> {
         let author = commit.author();
         let time = commit.time();
-        let timestamp = DateTime::from_timestamp(time.seconds(), 0).unwrap_or_else(|| Utc::now());
+        let timestamp = DateTime::from_timestamp(time.seconds(), 0).unwrap_or_else(Utc::now);
 
         Ok(GitInfo {
             commit_hash: commit.id().to_string(),

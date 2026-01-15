@@ -70,6 +70,12 @@ pub struct UsageInfo {
     pub usage_count: usize,
 }
 
+impl Default for UsageInfo {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl UsageInfo {
     pub fn new() -> Self {
         Self {

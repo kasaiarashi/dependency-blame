@@ -9,6 +9,12 @@ pub struct GoAdapter {
     scanner: scanner::GoScanner,
 }
 
+impl Default for GoAdapter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GoAdapter {
     pub fn new() -> Self {
         Self {

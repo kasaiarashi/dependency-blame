@@ -8,6 +8,12 @@ pub struct EcosystemRegistry {
     adapters: HashMap<EcosystemType, Box<dyn EcosystemAdapter>>,
 }
 
+impl Default for EcosystemRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl EcosystemRegistry {
     pub fn new() -> Self {
         Self {

@@ -9,6 +9,12 @@ pub struct NodeAdapter {
     scanner: scanner::NodeScanner,
 }
 
+impl Default for NodeAdapter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl NodeAdapter {
     pub fn new() -> Self {
         Self {

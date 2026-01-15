@@ -9,6 +9,12 @@ pub struct RustAdapter {
     scanner: scanner::RustScanner,
 }
 
+impl Default for RustAdapter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RustAdapter {
     pub fn new() -> Self {
         Self {
