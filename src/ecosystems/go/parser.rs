@@ -17,12 +17,11 @@ impl DependencyParser for GoParser {
     }
 
     fn parse_dependencies(&self, file_path: &Path) -> Result<Vec<Dependency>> {
-        let content = fs::read_to_string(file_path).map_err(|e| {
-            DependencyBlameError::ParseError {
+        let content =
+            fs::read_to_string(file_path).map_err(|e| DependencyBlameError::ParseError {
                 file: file_path.display().to_string(),
                 reason: e.to_string(),
-            }
-        })?;
+            })?;
 
         let mut deps = Vec::new();
         let mut in_require_block = false;

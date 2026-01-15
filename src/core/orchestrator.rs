@@ -19,12 +19,15 @@ impl DependencyOrchestrator {
         let ecosystem = self.registry.detect_from_directory(&query.repo_path)?;
 
         // 2. Get dependency file path
-        let dep_file = self.registry.get_dependency_file(&query.repo_path, ecosystem)?;
+        let dep_file = self
+            .registry
+            .get_dependency_file(&query.repo_path, ecosystem)?;
 
         // 3. Parse dependency file to find the dependency
-        let adapter = self.registry.get_adapter(ecosystem).ok_or_else(|| {
-            DependencyBlameError::UnsupportedEcosystem
-        })?;
+        let adapter = self
+            .registry
+            .get_adapter(ecosystem)
+            .ok_or_else(|| DependencyBlameError::UnsupportedEcosystem)?;
 
         let dependency = adapter
             .parser()
@@ -36,10 +39,11 @@ impl DependencyOrchestrator {
         // 4. Get git information if requested
         let git_info = if query.include_git_history {
             match GitAnalyzer::new(&query.repo_path) {
-                Ok(git_analyzer) => {
-                    git_analyzer.find_dependency_introduction(&dep_file, &query.dependency_name).ok().flatten()
-                }
-                Err(_) => None,  // Not a git repo or error reading git
+                Ok(git_analyzer) => git_analyzer
+                    .find_dependency_introduction(&dep_file, &query.dependency_name)
+                    .ok()
+                    .flatten(),
+                Err(_) => None, // Not a git repo or error reading git
             }
         } else {
             None
@@ -69,9 +73,10 @@ impl DependencyOrchestrator {
         let dep_file = self.registry.get_dependency_file(repo_path, ecosystem)?;
 
         // 3. Parse all dependencies
-        let adapter = self.registry.get_adapter(ecosystem).ok_or_else(|| {
-            DependencyBlameError::UnsupportedEcosystem
-        })?;
+        let adapter = self
+            .registry
+            .get_adapter(ecosystem)
+            .ok_or_else(|| DependencyBlameError::UnsupportedEcosystem)?;
 
         adapter.parser().parse_dependencies(&dep_file)
     }

@@ -40,11 +40,7 @@ impl ImportScanner for PythonScanner {
 
     fn extract_package_name(&self, import: &str) -> String {
         // Extract the first component before . or just the whole string
-        import
-            .split('.')
-            .next()
-            .unwrap_or(import)
-            .to_string()
+        import.split('.').next().unwrap_or(import).to_string()
     }
 
     fn normalize_package_name(&self, name: &str) -> String {
@@ -52,8 +48,6 @@ impl ImportScanner for PythonScanner {
         // Package name on PyPI might be different from import name
         // E.g., "beautifulsoup4" (PyPI) vs "bs4" (import)
         // For now, just normalize case and replace hyphens with underscores
-        name.trim()
-            .to_lowercase()
-            .replace('-', "_")
+        name.trim().to_lowercase().replace('-', "_")
     }
 }

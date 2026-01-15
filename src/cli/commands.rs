@@ -17,12 +17,7 @@ pub fn execute(cli: Cli) -> Result<()> {
             let registry = create_default_registry();
             let orchestrator = DependencyOrchestrator::new(registry);
 
-            let query = DependencyQuery::with_options(
-                dependency,
-                repo,
-                !no_git,
-                !no_scan,
-            );
+            let query = DependencyQuery::with_options(dependency, repo, !no_git, !no_scan);
 
             let analysis = orchestrator.analyze(query)?;
 

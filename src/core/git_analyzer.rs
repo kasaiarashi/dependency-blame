@@ -10,9 +10,8 @@ pub struct GitAnalyzer {
 
 impl GitAnalyzer {
     pub fn new(repo_path: &Path) -> Result<Self> {
-        let repo = Repository::discover(repo_path).map_err(|_| {
-            DependencyBlameError::GitRepoNotFound(repo_path.to_path_buf())
-        })?;
+        let repo = Repository::discover(repo_path)
+            .map_err(|_| DependencyBlameError::GitRepoNotFound(repo_path.to_path_buf()))?;
         Ok(Self { repo })
     }
 
@@ -93,10 +92,7 @@ impl GitAnalyzer {
     }
 
     /// Get blame information for the entire dependency file
-    pub fn get_dependency_history(
-        &self,
-        dependency_file: &Path,
-    ) -> Result<Vec<GitInfo>> {
+    pub fn get_dependency_history(&self, dependency_file: &Path) -> Result<Vec<GitInfo>> {
         let repo_path = self.repo.workdir().ok_or_else(|| {
             DependencyBlameError::Other("Repository has no working directory".to_string())
         })?;
@@ -129,8 +125,7 @@ impl GitAnalyzer {
     fn extract_commit_info(&self, commit: &git2::Commit, file_path: &Path) -> Result<GitInfo> {
         let author = commit.author();
         let time = commit.time();
-        let timestamp = DateTime::from_timestamp(time.seconds(), 0)
-            .unwrap_or_else(|| Utc::now());
+        let timestamp = DateTime::from_timestamp(time.seconds(), 0).unwrap_or_else(|| Utc::now());
 
         Ok(GitInfo {
             commit_hash: commit.id().to_string(),
@@ -162,11 +157,9 @@ impl GitAnalyzer {
         let mut diff_opts = DiffOptions::new();
         diff_opts.pathspec(file_path);
 
-        let diff = self.repo.diff_tree_to_tree(
-            Some(&parent_tree),
-            Some(&tree),
-            Some(&mut diff_opts),
-        )?;
+        let diff =
+            self.repo
+                .diff_tree_to_tree(Some(&parent_tree), Some(&tree), Some(&mut diff_opts))?;
 
         Ok(diff.deltas().len() > 0)
     }

@@ -40,18 +40,12 @@ impl ImportScanner for RustScanner {
 
     fn extract_package_name(&self, import: &str) -> String {
         // Extract the first component before :: or just the whole string
-        import
-            .split("::")
-            .next()
-            .unwrap_or(import)
-            .to_string()
+        import.split("::").next().unwrap_or(import).to_string()
     }
 
     fn normalize_package_name(&self, name: &str) -> String {
         // Rust crate names use hyphens in Cargo.toml but underscores in code
         // Normalize by converting to lowercase and replacing hyphens with underscores
-        name.trim()
-            .to_lowercase()
-            .replace('-', "_")
+        name.trim().to_lowercase().replace('-', "_")
     }
 }

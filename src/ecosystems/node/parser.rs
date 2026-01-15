@@ -17,19 +17,17 @@ impl DependencyParser for NodeParser {
     }
 
     fn parse_dependencies(&self, file_path: &Path) -> Result<Vec<Dependency>> {
-        let content = fs::read_to_string(file_path).map_err(|e| {
-            DependencyBlameError::ParseError {
+        let content =
+            fs::read_to_string(file_path).map_err(|e| DependencyBlameError::ParseError {
                 file: file_path.display().to_string(),
                 reason: e.to_string(),
-            }
-        })?;
+            })?;
 
-        let package_json: Value = serde_json::from_str(&content).map_err(|e| {
-            DependencyBlameError::ParseError {
+        let package_json: Value =
+            serde_json::from_str(&content).map_err(|e| DependencyBlameError::ParseError {
                 file: file_path.display().to_string(),
                 reason: e.to_string(),
-            }
-        })?;
+            })?;
 
         let mut deps = Vec::new();
 
@@ -47,7 +45,10 @@ impl DependencyParser for NodeParser {
         }
 
         // Parse dev dependencies
-        if let Some(dev_dependencies) = package_json.get("devDependencies").and_then(|v| v.as_object()) {
+        if let Some(dev_dependencies) = package_json
+            .get("devDependencies")
+            .and_then(|v| v.as_object())
+        {
             for (name, value) in dev_dependencies {
                 let version = value.as_str().unwrap_or("*").to_string();
                 deps.push(Dependency {
@@ -60,7 +61,10 @@ impl DependencyParser for NodeParser {
         }
 
         // Parse peer dependencies
-        if let Some(peer_dependencies) = package_json.get("peerDependencies").and_then(|v| v.as_object()) {
+        if let Some(peer_dependencies) = package_json
+            .get("peerDependencies")
+            .and_then(|v| v.as_object())
+        {
             for (name, value) in peer_dependencies {
                 let version = value.as_str().unwrap_or("*").to_string();
                 deps.push(Dependency {
@@ -73,7 +77,10 @@ impl DependencyParser for NodeParser {
         }
 
         // Parse optional dependencies
-        if let Some(optional_dependencies) = package_json.get("optionalDependencies").and_then(|v| v.as_object()) {
+        if let Some(optional_dependencies) = package_json
+            .get("optionalDependencies")
+            .and_then(|v| v.as_object())
+        {
             for (name, value) in optional_dependencies {
                 let version = value.as_str().unwrap_or("*").to_string();
                 deps.push(Dependency {

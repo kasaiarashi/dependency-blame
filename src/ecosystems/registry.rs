@@ -52,11 +52,17 @@ impl EcosystemRegistry {
             return Ok(EcosystemType::Go);
         }
 
-        Err(DependencyBlameError::EcosystemDetectionFailed(dir_path.to_path_buf()))
+        Err(DependencyBlameError::EcosystemDetectionFailed(
+            dir_path.to_path_buf(),
+        ))
     }
 
     /// Get dependency file path for an ecosystem
-    pub fn get_dependency_file(&self, dir_path: &Path, ecosystem: EcosystemType) -> Result<std::path::PathBuf> {
+    pub fn get_dependency_file(
+        &self,
+        dir_path: &Path,
+        ecosystem: EcosystemType,
+    ) -> Result<std::path::PathBuf> {
         let file_name = match ecosystem {
             EcosystemType::Rust => "Cargo.toml",
             EcosystemType::Node => "package.json",
@@ -75,7 +81,9 @@ impl EcosystemRegistry {
         if file_path.exists() {
             Ok(file_path)
         } else {
-            Err(DependencyBlameError::DependencyFileNotFound(file_name.to_string()))
+            Err(DependencyBlameError::DependencyFileNotFound(
+                file_name.to_string(),
+            ))
         }
     }
 

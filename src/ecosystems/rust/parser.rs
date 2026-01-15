@@ -16,19 +16,17 @@ impl DependencyParser for RustParser {
     }
 
     fn parse_dependencies(&self, file_path: &Path) -> Result<Vec<Dependency>> {
-        let content = fs::read_to_string(file_path).map_err(|e| {
-            DependencyBlameError::ParseError {
+        let content =
+            fs::read_to_string(file_path).map_err(|e| DependencyBlameError::ParseError {
                 file: file_path.display().to_string(),
                 reason: e.to_string(),
-            }
-        })?;
+            })?;
 
-        let cargo_toml: toml::Value = toml::from_str(&content).map_err(|e| {
-            DependencyBlameError::ParseError {
+        let cargo_toml: toml::Value =
+            toml::from_str(&content).map_err(|e| DependencyBlameError::ParseError {
                 file: file_path.display().to_string(),
                 reason: e.to_string(),
-            }
-        })?;
+            })?;
 
         let mut deps = Vec::new();
 
@@ -46,7 +44,10 @@ impl DependencyParser for RustParser {
         }
 
         // Parse dev dependencies
-        if let Some(dev_dependencies) = cargo_toml.get("dev-dependencies").and_then(|v| v.as_table()) {
+        if let Some(dev_dependencies) = cargo_toml
+            .get("dev-dependencies")
+            .and_then(|v| v.as_table())
+        {
             for (name, value) in dev_dependencies {
                 let version = extract_version(value);
                 deps.push(Dependency {
@@ -59,7 +60,10 @@ impl DependencyParser for RustParser {
         }
 
         // Parse build dependencies
-        if let Some(build_dependencies) = cargo_toml.get("build-dependencies").and_then(|v| v.as_table()) {
+        if let Some(build_dependencies) = cargo_toml
+            .get("build-dependencies")
+            .and_then(|v| v.as_table())
+        {
             for (name, value) in build_dependencies {
                 let version = extract_version(value);
                 deps.push(Dependency {
@@ -80,13 +84,11 @@ fn extract_version(value: &toml::Value) -> String {
         // Simple version: serde = "1.0"
         toml::Value::String(s) => s.clone(),
         // Table format: serde = { version = "1.0", features = [...] }
-        toml::Value::Table(table) => {
-            table
-                .get("version")
-                .and_then(|v| v.as_str())
-                .unwrap_or("*")
-                .to_string()
-        }
+        toml::Value::Table(table) => table
+            .get("version")
+            .and_then(|v| v.as_str())
+            .unwrap_or("*")
+            .to_string(),
         _ => "*".to_string(),
     }
 }

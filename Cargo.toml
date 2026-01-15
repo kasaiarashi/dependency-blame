@@ -2,10 +2,12 @@
 name = "dependency-blame"
 version = "0.1.0"
 edition = "2021"
-authors = ["Your Name <your.email@example.com>"]
-description = "Analyze why dependencies exist in your project"
+authors = ["kasaiarashi"]
+description = "Analyze why dependencies exist in your project - track their origins and usage"
 license = "MIT"
-repository = "https://github.com/yourusername/dependency-blame"
+repository = "https://github.com/kasaiarashi/dependency-blame"
+keywords = ["cli", "dependencies", "analysis", "git", "tooling"]
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
 # CLI framework

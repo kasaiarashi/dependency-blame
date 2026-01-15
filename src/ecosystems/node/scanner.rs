@@ -66,11 +66,7 @@ impl ImportScanner for NodeScanner {
         }
 
         // Regular package: package or package/subpath
-        import
-            .split('/')
-            .next()
-            .unwrap_or(import)
-            .to_string()
+        import.split('/').next().unwrap_or(import).to_string()
     }
 
     fn normalize_package_name(&self, name: &str) -> String {

@@ -1,8 +1,8 @@
 mod parser;
 mod scanner;
 
-use crate::ecosystems::traits::{DependencyParser, EcosystemAdapter, ImportScanner};
 use crate::core::dependency::EcosystemType;
+use crate::ecosystems::traits::{DependencyParser, EcosystemAdapter, ImportScanner};
 
 pub struct NodeAdapter {
     parser: parser::NodeParser,

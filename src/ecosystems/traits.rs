@@ -15,10 +15,7 @@ pub trait DependencyParser: Send + Sync {
 
     /// Check if this parser can handle the given file
     fn can_parse(&self, file_path: &Path) -> bool {
-        let file_name = file_path
-            .file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or("");
+        let file_name = file_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
         self.supported_files().contains(&file_name)
     }
 
@@ -47,7 +44,8 @@ pub trait ImportScanner: Send + Sync {
                 let normalized_dep = self.normalize_package_name(dependency_name);
                 imports.iter().any(|imp| {
                     let normalized_imp = self.normalize_package_name(imp);
-                    normalized_imp.contains(&normalized_dep) || normalized_dep.contains(&normalized_imp)
+                    normalized_imp.contains(&normalized_dep)
+                        || normalized_dep.contains(&normalized_imp)
                 })
             })
             .unwrap_or(false)

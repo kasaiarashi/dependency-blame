@@ -16,10 +16,7 @@ impl DependencyParser for PythonParser {
     }
 
     fn parse_dependencies(&self, file_path: &Path) -> Result<Vec<Dependency>> {
-        let file_name = file_path
-            .file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or("");
+        let file_name = file_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
         match file_name {
             "requirements.txt" => self.parse_requirements_txt(file_path),
@@ -34,12 +31,11 @@ impl DependencyParser for PythonParser {
 
 impl PythonParser {
     fn parse_requirements_txt(&self, file_path: &Path) -> Result<Vec<Dependency>> {
-        let content = fs::read_to_string(file_path).map_err(|e| {
-            DependencyBlameError::ParseError {
+        let content =
+            fs::read_to_string(file_path).map_err(|e| DependencyBlameError::ParseError {
                 file: file_path.display().to_string(),
                 reason: e.to_string(),
-            }
-        })?;
+            })?;
 
         let mut deps = Vec::new();
 
@@ -66,19 +62,17 @@ impl PythonParser {
     }
 
     fn parse_pyproject_toml(&self, file_path: &Path) -> Result<Vec<Dependency>> {
-        let content = fs::read_to_string(file_path).map_err(|e| {
-            DependencyBlameError::ParseError {
+        let content =
+            fs::read_to_string(file_path).map_err(|e| DependencyBlameError::ParseError {
                 file: file_path.display().to_string(),
                 reason: e.to_string(),
-            }
-        })?;
+            })?;
 
-        let pyproject: toml::Value = toml::from_str(&content).map_err(|e| {
-            DependencyBlameError::ParseError {
+        let pyproject: toml::Value =
+            toml::from_str(&content).map_err(|e| DependencyBlameError::ParseError {
                 file: file_path.display().to_string(),
                 reason: e.to_string(),
-            }
-        })?;
+            })?;
 
         let mut deps = Vec::new();
 
@@ -96,12 +90,11 @@ impl PythonParser {
 
                 let version = match value {
                     toml::Value::String(s) => s.clone(),
-                    toml::Value::Table(t) => {
-                        t.get("version")
-                            .and_then(|v| v.as_str())
-                            .unwrap_or("*")
-                            .to_string()
-                    }
+                    toml::Value::Table(t) => t
+                        .get("version")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("*")
+                        .to_string(),
                     _ => "*".to_string(),
                 };
 

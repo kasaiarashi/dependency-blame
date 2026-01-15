@@ -2,7 +2,10 @@ use crate::core::dependency::{Dependency, DependencyAnalysis};
 
 pub fn print_analysis(analysis: &DependencyAnalysis) {
     println!("\n{}", "=".repeat(60));
-    println!("Dependency Analysis: {} v{}", analysis.dependency.name, analysis.dependency.version);
+    println!(
+        "Dependency Analysis: {} v{}",
+        analysis.dependency.name, analysis.dependency.version
+    );
     println!("{}\n", "=".repeat(60));
 
     // Dependency info
@@ -20,7 +23,9 @@ pub fn print_analysis(analysis: &DependencyAnalysis) {
         println!("Message:\n{}", git_info.message.trim());
     } else {
         println!("\n{}", "-".repeat(60));
-        println!("Git History: Not available (not a git repository or dependency history not found)");
+        println!(
+            "Git History: Not available (not a git repository or dependency history not found)"
+        );
         println!("{}", "-".repeat(60));
     }
 
@@ -30,17 +35,34 @@ pub fn print_analysis(analysis: &DependencyAnalysis) {
     println!("{}", "-".repeat(60));
 
     if analysis.usage_info.is_used {
-        println!("Status: USED ({} imports found)", analysis.usage_info.usage_count);
+        println!(
+            "Status: USED ({} imports found)",
+            analysis.usage_info.usage_count
+        );
         println!("\nLocations:");
 
         let max_display = 10;
-        for (i, location) in analysis.usage_info.import_locations.iter().take(max_display).enumerate() {
-            println!("  {}. {}:{}", i + 1, location.file_path.display(), location.line_number);
+        for (i, location) in analysis
+            .usage_info
+            .import_locations
+            .iter()
+            .take(max_display)
+            .enumerate()
+        {
+            println!(
+                "  {}. {}:{}",
+                i + 1,
+                location.file_path.display(),
+                location.line_number
+            );
             println!("     {}", location.line_content);
         }
 
         if analysis.usage_info.usage_count > max_display {
-            println!("\n  ... and {} more locations", analysis.usage_info.usage_count - max_display);
+            println!(
+                "\n  ... and {} more locations",
+                analysis.usage_info.usage_count - max_display
+            );
         }
     } else {
         println!("Status: UNUSED (no imports found)");
@@ -58,17 +80,36 @@ pub fn print_dependency_list(dependencies: &[Dependency]) {
     println!("Dependencies ({} total)", dependencies.len());
     println!("{}\n", "=".repeat(60));
 
-    let direct_deps: Vec<_> = dependencies.iter().filter(|d| {
-        matches!(d.dependency_type, crate::core::dependency::DependencyType::Direct)
-    }).collect();
+    let direct_deps: Vec<_> = dependencies
+        .iter()
+        .filter(|d| {
+            matches!(
+                d.dependency_type,
+                crate::core::dependency::DependencyType::Direct
+            )
+        })
+        .collect();
 
-    let dev_deps: Vec<_> = dependencies.iter().filter(|d| {
-        matches!(d.dependency_type, crate::core::dependency::DependencyType::Dev)
-    }).collect();
+    let dev_deps: Vec<_> = dependencies
+        .iter()
+        .filter(|d| {
+            matches!(
+                d.dependency_type,
+                crate::core::dependency::DependencyType::Dev
+            )
+        })
+        .collect();
 
-    let other_deps: Vec<_> = dependencies.iter().filter(|d| {
-        !matches!(d.dependency_type, crate::core::dependency::DependencyType::Direct | crate::core::dependency::DependencyType::Dev)
-    }).collect();
+    let other_deps: Vec<_> = dependencies
+        .iter()
+        .filter(|d| {
+            !matches!(
+                d.dependency_type,
+                crate::core::dependency::DependencyType::Direct
+                    | crate::core::dependency::DependencyType::Dev
+            )
+        })
+        .collect();
 
     if !direct_deps.is_empty() {
         println!("Direct Dependencies ({}):", direct_deps.len());
@@ -92,7 +133,12 @@ pub fn print_dependency_list(dependencies: &[Dependency]) {
         println!("Other Dependencies ({}):", other_deps.len());
         println!("{}", "-".repeat(60));
         for dep in &other_deps {
-            println!("  {} ({}) - {}", dep.name, dep.version, dep.dependency_type.as_str());
+            println!(
+                "  {} ({}) - {}",
+                dep.name,
+                dep.version,
+                dep.dependency_type.as_str()
+            );
         }
         println!();
     }
